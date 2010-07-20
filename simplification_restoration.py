@@ -1,5 +1,8 @@
 class SR():
     def __init__(self, dictionary, word_matching=True):
+        """Adding every simplified value as a special key for restoring."""
+        for v in list(dictionary.values()): 
+            dictionary[v] = v
         self.dictionary = dictionary
         self.max_len = max([len(w) for w in self.dictionary])
         self.word_matching = word_matching
@@ -69,7 +72,7 @@ if __name__ == "__main__":
     dictionary = {'lung cancer': 'disease', 'fever': 'symptom', 'aspirin': 'drug', 'head': 'body part', 'x ray': 'examine', 'lung': 'body part'}
     preprocessor = SR(dictionary)
 
-    text = 'lung cancer patient suffers from fever, headache, and other symptoms. aspirin was given with x ray on his head and lung has been performed without significant finding in his lung' 
+    text = 'lung cancer patient suffers from fever, headache, and other symptom. aspirin was given with x ray on his head and lung has been performed without significant finding in his lung' 
 
     simplified, inv = preprocessor.simplify(text)
     print(simplified)
@@ -92,8 +95,12 @@ if __name__ == "__main__":
         print(preprocessor.extract_restore(simplified, text, inv, p, p+1))
         p += 1
 
-
-
-
-
+    #   Restore all symptons 
+    p = 0
+    while True:
+        p = simplified.find("symptom", p)
+        if p == -1:
+            break
+        print(preprocessor.extract_restore(simplified, text, inv, p, p+1))
+        p += 1
         
